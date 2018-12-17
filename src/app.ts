@@ -117,45 +117,86 @@
 
 
 
+// /**
+//  * Arrow Functions and Lexical Scope
+//  */
+
+//  // The value of "this" changes (in most cases) on how it is called
+
+//  // eXample:
+
+//  // myFunction(); // called from the window context so "this" === window
+//  class MyClass {
+//    myMethod() {
+//      // New scope (lexical)
+//      const foo = 123;
+//      // the context of "this" is the class because
+//      // it was called like `myInstance.myMethod`
+
+//      // To be able to reference the desired context later, you can save "this" to a variablle
+//      const that = this;
+//      console.log('1', this, foo);
+//      setTimeout(function() {
+//        // Another new scope (lexical)
+//        // But "this" is the window object because it is called without a context
+//        console.log('2', this, foo);
+
+//        // Reference the lexical scope to get that context
+//        console.log('3', that);
+//        // 
+//      }, 0);
+
+//      // ES6 Array Functions solve "this"
+//     setTimeout(() => {
+//       // Arrow functions preserve the context from the parent!!
+//       // "this" references the class instead of window
+//       // An arrow function does NOT inherit "this" from the parent, it simply doesn't bind a new "this" 
+//       // and therefore does not override the parent "this"
+//       console.log('4', this);
+//     }, 0);
+//    }
+//  }
+
+//  const myInstance = new MyClass();
+//  myInstance.myMethod();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Arrow Functions and Lexical Scope
+ * Typing "this" and "noImplicitThis"
  */
 
- // The value of "this" changes (in most cases) on how it is called
+const elem = document.querySelector('.click');
+const differentElem = document.querySelector('.different-click');
 
- // eXample:
+// DOM events have type defs as well
+// Typescript has no clue what the context of "this" is; so, we need to type it
+// The "this" in the argument list is for typing only!!! It's not a real argument that needs
+// to get passed.  Remember that `.call` actually does pass in context first, so TS is just 
+// using this first argument as typing info
+function handleClick(this: HTMLAnchorElement, event: Event) {
+  event.preventDefault();
+  // Will log a reference to the DOM node because the element invoked handleClick
+  // By default, "this" is an implicite TS "any", to prevent that, use `noImplicitThis` in tsconfig.json
+  console.log('Click!', this.href);
+  console.log('className = ', this.className);
+}
 
- // myFunction(); // called from the window context so "this" === window
- class MyClass {
-   myMethod() {
-     // New scope (lexical)
-     const foo = 123;
-     // the context of "this" is the class because
-     // it was called like `myInstance.myMethod`
+elem.addEventListener('click', handleClick, false);
 
-     // To be able to reference the desired context later, you can save "this" to a variablle
-     const that = this;
-     console.log('1', this, foo);
-     setTimeout(function() {
-       // Another new scope (lexical)
-       // But "this" is the window object because it is called without a context
-       console.log('2', this, foo);
-
-       // Reference the lexical scope to get that context
-       console.log('3', that);
-       // 
-     }, 0);
-
-     // ES6 Array Functions solve "this"
-    setTimeout(() => {
-      // Arrow functions preserve the context from the parent!!
-      // "this" references the class instead of window
-      // An arrow function does NOT inherit "this" from the parent, it simply doesn't bind a new "this" 
-      // and therefore does not override the parent "this"
-      console.log('4', this);
-    }, 0);
-   }
- }
-
- const myInstance = new MyClass();
- myInstance.myMethod();
+// IMPORTANT: Don't use arrow functions with event listeners because "this" does NOT get bound to the calling element!!!
+differentElem.addEventListener('click', () => {
+  console.log('Different Click!', this);
+});
