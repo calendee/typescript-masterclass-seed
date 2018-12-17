@@ -174,29 +174,80 @@
 
 
 
+// /**
+//  * Typing "this" and "noImplicitThis"
+//  */
+
+// const elem = document.querySelector('.click');
+// const differentElem = document.querySelector('.different-click');
+
+// // DOM events have type defs as well
+// // Typescript has no clue what the context of "this" is; so, we need to type it
+// // The "this" in the argument list is for typing only!!! It's not a real argument that needs
+// // to get passed.  Remember that `.call` actually does pass in context first, so TS is just 
+// // using this first argument as typing info
+// function handleClick(this: HTMLAnchorElement, event: Event) {
+//   event.preventDefault();
+//   // Will log a reference to the DOM node because the element invoked handleClick
+//   // By default, "this" is an implicite TS "any", to prevent that, use `noImplicitThis` in tsconfig.json
+//   console.log('Click!', this.href);
+//   console.log('className = ', this.className);
+// }
+
+// elem.addEventListener('click', handleClick, false);
+
+// // IMPORTANT: Don't use arrow functions with event listeners because "this" does NOT get bound to the calling element!!!
+// differentElem.addEventListener('click', () => {
+//   console.log('Different Click!', this);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Typing "this" and "noImplicitThis"
+ * "typeof" Type Queries
  */
 
-const elem = document.querySelector('.click');
-const differentElem = document.querySelector('.different-click');
+// 'object'
+ console.log(typeof []);
 
-// DOM events have type defs as well
-// Typescript has no clue what the context of "this" is; so, we need to type it
-// The "this" in the argument list is for typing only!!! It's not a real argument that needs
-// to get passed.  Remember that `.call` actually does pass in context first, so TS is just 
-// using this first argument as typing info
-function handleClick(this: HTMLAnchorElement, event: Event) {
-  event.preventDefault();
-  // Will log a reference to the DOM node because the element invoked handleClick
-  // By default, "this" is an implicite TS "any", to prevent that, use `noImplicitThis` in tsconfig.json
-  console.log('Click!', this.href);
-  console.log('className = ', this.className);
-}
+ // TS will infer the types for this object
+ const person = {
+   name: 'Justin',
+   age: 49
+ };
 
-elem.addEventListener('click', handleClick, false);
 
-// IMPORTANT: Don't use arrow functions with event listeners because "this" does NOT get bound to the calling element!!!
-differentElem.addEventListener('click', () => {
-  console.log('Different Click!', this);
-});
+ // The below does NOT assign "object" to the "type Person".
+ // Instead, it assigns the typing information from the person object
+ // to the Person variable
+ type Person = typeof person;
+
+ // Now, the type Person is being applied to another object
+ // Since the orginal person had an age type of "number", the person
+ // below is failing validation because it's using a string for age
+ const anotherPerson: Person = {
+   name: 'John',
+   age: '30'
+ }
+
+ // Can also do it in one line:
+ const yetAnotherPerson: typeof person = {
+   name: 'Jeff',
+   age: '40'
+ }
