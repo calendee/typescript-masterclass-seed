@@ -219,35 +219,75 @@
 
 
 
+// /**
+//  * "typeof" Type Queries
+//  */
+
+// // 'object'
+//  console.log(typeof []);
+
+//  // TS will infer the types for this object
+//  const person = {
+//    name: 'Justin',
+//    age: 49
+//  };
+
+
+//  // The below does NOT assign "object" to the "type Person".
+//  // Instead, it assigns the typing information from the person object
+//  // to the Person variable
+//  type Person = typeof person;
+
+//  // Now, the type Person is being applied to another object
+//  // Since the orginal person had an age type of "number", the person
+//  // below is failing validation because it's using a string for age
+//  const anotherPerson: Person = {
+//    name: 'John',
+//    age: '30'
+//  }
+
+//  // Can also do it in one line:
+//  const yetAnotherPerson: typeof person = {
+//    name: 'Jeff',
+//    age: '40'
+//  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * "typeof" Type Queries
+ * "keyof" Index Type Queries
  */
 
-// 'object'
- console.log(typeof []);
+const person = {
+  name: 'Justin',
+  age: 49
+};
 
- // TS will infer the types for this object
- const person = {
-   name: 'Justin',
-   age: 49
- };
+type Person = typeof person;
 
+// this will have string literal keys of "name" | "age"
+type PersonKeys = keyof Person;
 
- // The below does NOT assign "object" to the "type Person".
- // Instead, it assigns the typing information from the person object
- // to the Person variable
- type Person = typeof person;
+// This will have pure types of :   string | number
+type PersonTypes = Person[PersonKeys];
 
- // Now, the type Person is being applied to another object
- // Since the orginal person had an age type of "number", the person
- // below is failing validation because it's using a string for age
- const anotherPerson: Person = {
-   name: 'John',
-   age: '30'
- }
+const anotherPerson: Person = {
+  name: 'John',
+  age: '30'
+}
 
- // Can also do it in one line:
- const yetAnotherPerson: typeof person = {
-   name: 'Jeff',
-   age: '40'
- }
