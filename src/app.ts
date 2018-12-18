@@ -269,25 +269,65 @@
 
 
 
-/**
- * "keyof" Index Type Queries
- */
+// /**
+//  * "keyof" Index Type Queries
+//  */
 
+// const person = {
+//   name: 'Justin',
+//   age: 49
+// };
+
+// type Person = typeof person;
+
+// // this will have string literal keys of "name" | "age"
+// type PersonKeys = keyof Person;
+
+// // This will have pure types of :   string | number
+// type PersonTypes = Person[PersonKeys];
+
+// const anotherPerson: Person = {
+//   name: 'John',
+//   age: '30'
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * "keyof", Generics and Lookup Types
+ */
 const person = {
   name: 'Justin',
   age: 49
 };
 
 type Person = typeof person;
-
-// this will have string literal keys of "name" | "age"
 type PersonKeys = keyof Person;
-
-// This will have pure types of :   string | number
 type PersonTypes = Person[PersonKeys];
 
-const anotherPerson: Person = {
-  name: 'John',
-  age: '30'
+// Right now, hovering over personName gives us no typing information
+// function getProperty(obj: Person, key: string) {
+
+// K is a subtype of name and age, so it must be one of the keys name or age
+// This is a "type safe lookup" or "index access type" or "lookup type"
+// Now hovering over personName below will show a type of "string"
+// The <T, K...> are creating new types
+function getProperty<T, K extends keyof T>(obj: T, key: K) {
+  return obj[key];
 }
 
+const personName= getProperty(person, 'name');
+console.log(`personName = ${personName}`);
