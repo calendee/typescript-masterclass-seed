@@ -306,28 +306,105 @@
 
 
 
+// /**
+//  * "keyof", Generics and Lookup Types
+//  */
+// const person = {
+//   name: 'Justin',
+//   age: 49
+// };
+
+// type Person = typeof person;
+// type PersonKeys = keyof Person;
+// type PersonTypes = Person[PersonKeys];
+
+// // Right now, hovering over personName gives us no typing information
+// // function getProperty(obj: Person, key: string) {
+
+// // K is a subtype of name and age, so it must be one of the keys name or age
+// // This is a "type safe lookup" or "index access type" or "lookup type"
+// // Now hovering over personName below will show a type of "string"
+// // The <T, K...> are creating new types
+// function getProperty<T, K extends keyof T>(obj: T, key: K) {
+//   return obj[key];
+// }
+
+// const personName= getProperty(person, 'name');
+// console.log(`personName = ${personName}`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * "keyof", Generics and Lookup Types
+ * "readonly" mapped type
  */
-const person = {
-  name: 'Justin',
-  age: 49
-};
 
-type Person = typeof person;
-type PersonKeys = keyof Person;
-type PersonTypes = Person[PersonKeys];
+// Transforming one type into another
+// NOTE: All of the examples below are no longer required to create these readonly
+// types because TS automatically does that on `freeze` now.  
+// However it's an example of map typing
 
-// Right now, hovering over personName gives us no typing information
-// function getProperty(obj: Person, key: string) {
-
-// K is a subtype of name and age, so it must be one of the keys name or age
-// This is a "type safe lookup" or "index access type" or "lookup type"
-// Now hovering over personName below will show a type of "string"
-// The <T, K...> are creating new types
-function getProperty<T, K extends keyof T>(obj: T, key: K) {
-  return obj[key];
+interface Person {
+  name: string;
+  age: number;
 }
 
-const personName= getProperty(person, 'name');
-console.log(`personName = ${personName}`);
+interface ReadOnlyPerson {
+  readonly name: string;
+  readonly age: number;
+}
+
+const person: Person = {
+  name: 'Justin',
+  age: 49
+}
+
+// We need an immutable object.  So, we're saying the return type will be a ReadOnlyPerson
+function freezePerson(person: Person): ReadOnlyPerson {
+  return Object.freeze(person);
+}
+
+const newPerson = freezePerson(person);
+
+// Not allowed because it's read only
+newPerson.age = 28;
+
+
+
+// Instead of creating a specific person interface, you can map the type like this
+// That would work for any object, not just a person object
+function freeze<T>(obj: T): Readonly<T> {
+  return Object.freeze(obj);
+}
+
+const newPerson1 = freeze(person);
+
+
+/// Create our own read only type
+type MyReadonly<T> = {
+  // P is placeholder for all the keys in the reference object
+  readonly [P in keyof T]: T[P]
+}
+
+function freezeMyReadonly<T>(obj: T): MyReadonly<T> {
+  return Object.freeze(obj);
+}
+
+
+const newPerson2 = freezeMyReadonly(person);
+// Not allowed because it's readonly
+newPerson2.age = 20;
