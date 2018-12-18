@@ -349,62 +349,162 @@
 
 
 
+// /**
+//  * "readonly" mapped type
+//  */
+
+// // Transforming one type into another
+// // NOTE: All of the examples below are no longer required to create these readonly
+// // types because TS automatically does that on `freeze` now.  
+// // However it's an example of map typing
+
+// interface Person {
+//   name: string;
+//   age: number;
+// }
+
+// interface ReadOnlyPerson {
+//   readonly name: string;
+//   readonly age: number;
+// }
+
+// const person: Person = {
+//   name: 'Justin',
+//   age: 49
+// }
+
+// // We need an immutable object.  So, we're saying the return type will be a ReadOnlyPerson
+// function freezePerson(person: Person): ReadOnlyPerson {
+//   return Object.freeze(person);
+// }
+
+// const newPerson = freezePerson(person);
+
+// // Not allowed because it's read only
+// newPerson.age = 28;
+
+
+
+// // Instead of creating a specific person interface, you can map the type like this
+// // That would work for any object, not just a person object
+// function freeze<T>(obj: T): Readonly<T> {
+//   return Object.freeze(obj);
+// }
+
+// const newPerson1 = freeze(person);
+
+
+// /// Create our own read only type
+// type MyReadonly<T> = {
+//   // P is placeholder for all the keys in the reference object
+//   readonly [P in keyof T]: T[P]
+// }
+
+// function freezeMyReadonly<T>(obj: T): MyReadonly<T> {
+//   return Object.freeze(obj);
+// }
+
+
+// const newPerson2 = freezeMyReadonly(person);
+// // Not allowed because it's readonly
+// newPerson2.age = 20;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * "readonly" mapped type
+ * "Partial" Mapped Type
  */
 
-// Transforming one type into another
-// NOTE: All of the examples below are no longer required to create these readonly
-// types because TS automatically does that on `freeze` now.  
-// However it's an example of map typing
 
 interface Person {
   name: string;
   age: number;
 }
 
-interface ReadOnlyPerson {
-  readonly name: string;
-  readonly age: number;
+interface PartialPerson {
+  name?: string;
+  age?: number;
+}
+
+// Update a person object with just partial information while using types
+function updatePerson(person: Person, prop: PartialPerson) {
+  return { ...person, ...prop };
 }
 
 const person: Person = {
-  name: 'Justin',
-  age: 49
+  name: 'Todd',
+  age: 27
+};
+
+const newPerson = updatePerson(person, { name: 'Justin' });
+console.log(newPerson);
+
+
+// ^^^^ the above is painful because you have to maintain 2 different interfaces.
+// If you change one, you have to change the other
+////////////////////////////////////////////////////////////////////////
+// New version using partial mapped type
+// IMPORTANT : Creating a MyPartial is not really necessary because TS
+// already have a `Partial` type
+
+interface Person2 {
+  name: string;
+  age: number;
 }
 
-// We need an immutable object.  So, we're saying the return type will be a ReadOnlyPerson
-function freezePerson(person: Person): ReadOnlyPerson {
-  return Object.freeze(person);
+// Create a custom type
+type MyPartial<T> = {
+  // For each property in the reference type, return a type with that
+  // property name that is optional
+  [P in keyof T]?: T[P]
 }
 
-const newPerson = freezePerson(person);
-
-// Not allowed because it's read only
-newPerson.age = 28;
-
-
-
-// Instead of creating a specific person interface, you can map the type like this
-// That would work for any object, not just a person object
-function freeze<T>(obj: T): Readonly<T> {
-  return Object.freeze(obj);
+// Update a person object with just partial information while using types
+function updatePerson2(person: Person2, prop: MyPartial<Person>) {
+  return { ...person, ...prop };
 }
 
-const newPerson1 = freeze(person);
+const person2: Person2 = {
+  name: 'Todd',
+  age: 27
+};
+
+const newPerson2 = updatePerson2(person2, { name: 'Justin' });
+console.log(newPerson2);
 
 
-/// Create our own read only type
-type MyReadonly<T> = {
-  // P is placeholder for all the keys in the reference object
-  readonly [P in keyof T]: T[P]
-}
-
-function freezeMyReadonly<T>(obj: T): MyReadonly<T> {
-  return Object.freeze(obj);
-}
+// ^^^^ the above is painful because you have to maintain 2 different interfaces.
+// If you change one, you have to change the other
 
 
-const newPerson2 = freezeMyReadonly(person);
-// Not allowed because it's readonly
-newPerson2.age = 20;
+
+
+
+
+
+
+
