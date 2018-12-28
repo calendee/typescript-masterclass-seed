@@ -597,35 +597,99 @@
 
 
 
+// /**
+//  * “Pick” Mapped Type
+//  * 
+//  * Like lodash pluck : ask for a particular property of an object.  Just tell
+//  * the compiler you want a specific set of the keys for a type
+//  */
+
+//  interface Person {
+//    name: string;
+//    age: number;
+//    address: {}
+//  }
+
+//  // T and K are generic types
+//  // T is the interface person
+// type MyPick<T, K extends keyof T> = {
+//   // If property exists in K, return its type
+//   [P in K]: T[P];
+// }
+
+// // Type this using only name and age from the person interface
+// // Nice for avoiding making address optional in the interface
+//  const person: MyPick<Person, 'name' | 'age'> = {
+//    name: 'Justin',
+//    age: 49,
+//  };
+
+//  // NOTE : Pick is supported directly in TSC now:
+//  const person2: Pick<Person, 'name' | 'age'> = {
+//    name: 'Justin',
+//    age: 49,
+//  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * “Pick” Mapped Type
+ * "Record" Mapped Type
  * 
- * Like lodash pluck : ask for a particular property of an object.  Just tell
- * the compiler you want a specific set of the keys for a type
+ * Used when adopting the "dictionary" pattern
  */
 
- interface Person {
-   name: string;
-   age: number;
-   address: {}
- }
+ // This says the key will be a string and the value will be of type "any"
+ // which is not desirable
+// let dictionary: { [key: string]: any } = {};
 
- // T and K are generic types
- // T is the interface person
-type MyPick<T, K extends keyof T> = {
-  // If property exists in K, return its type
-  [P in K]: T[P];
+let dictionary: Record<string, TrackStates> = {};
+
+// NOTE: If you didn't use the interface you could do
+// let dictionary: Record<string, typeof item> = {};
+
+interface TrackStates {
+  current: string;
+  next: string;
 }
 
-// Type this using only name and age from the person interface
-// Nice for avoiding making address optional in the interface
- const person: MyPick<Person, 'name' | 'age'> = {
-   name: 'Justin',
-   age: 49,
- };
+// So, telling the Record type that current and next will be strings.
+// However, hard coding them is rigid
+// const item: Record<'current' | 'next', string> = {
+//   current: 'jsjskeke',
+//   next: 'ekdfkdk',
+// };
+// Use keyof to get a union type
+const item: Record<keyof TrackStates, string> = {
+  current: 'jsjskeke',
+  next: 'ekdfkdk',
+};
 
- // NOTE : Pick is supported directly in TSC now:
- const person2: Pick<Person, 'name' | 'age'> = {
-   name: 'Justin',
-   age: 49,
- }
+
+
+// In Javascript, the index for an array is coerced to a string
+// So, for the dictionary typing above, it matches the string
+dictionary[0] = item;
