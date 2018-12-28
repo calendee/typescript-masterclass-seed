@@ -789,26 +789,95 @@
 
 
 
+// /**
+//  * instanceof and Type Guards
+//  */
+
+// class Foo {
+//   bar() {}
+// }
+
+// // ^^ This class would compile to the following ES5 code:
+// // function Foo() {}
+// // Foo.prototype.bar = function() {};
+
+// const bar = new Foo();
+// // This is basically asking if "bar" is a prototype of foo
+// console.log(Object.getPrototypeOf(bar) === Foo.prototype);
+
+// // Easier method
+// console.log(bar instanceof Foo);
+
+
+
+
+// class Song {
+//   constructor(public title: string, public duration: number) {}
+// }
+
+// class PlayList {
+//   constructor(public name: string, public songs: Song[]) {}
+// }
+
+// // // If you wanted to use TS to type the item manually, 
+// // could do this with type assertions
+// // function getItemName(item: Song | PlayList) {
+// //   if((item as Song).title) {
+// //     return (item as Song).title;
+// //   }
+
+// //   return (item as PlayList).name;
+// // }
+
+// // Better to do this:
+// function getItemName(item: Song | PlayList) {
+//   if (item instanceof Song) {
+//     // TS knows this must be a song and will hint song properties
+//     return item.title;
+//   }
+
+//   // TS knows this is a playlist and will hint those properties
+//   return item.name;
+// }
+
+// const songName = getItemName(new Song('Blah', 303030000));
+// console.log('songName = ', songName);
+
+// const playlistName = getItemName(
+//   new PlayList('The Best Songs', [ new Song('Blah de bla', 300000)])
+// );
+// console.log('playlistName = ', playlistName);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * instanceof and Type Guards
+ * User Defined Type Guards
  */
-
-class Foo {
-  bar() {}
-}
-
-// ^^ This class would compile to the following ES5 code:
-// function Foo() {}
-// Foo.prototype.bar = function() {};
-
-const bar = new Foo();
-// This is basically asking if "bar" is a prototype of foo
-console.log(Object.getPrototypeOf(bar) === Foo.prototype);
-
-// Easier method
-console.log(bar instanceof Foo);
-
-
 
 
 class Song {
@@ -819,24 +888,18 @@ class PlayList {
   constructor(public name: string, public songs: Song[]) {}
 }
 
-// // If you wanted to use TS to type the item manually, 
-// could do this with type assertions
-// function getItemName(item: Song | PlayList) {
-//   if((item as Song).title) {
-//     return (item as Song).title;
-//   }
+// If this function returns true, it must be a song
+// and TS uses this as a type guard
+// This only allows a boolean return because "item is Song" is a boolean return type
+function isSong(item: any): item is Song {
+  return item instanceof Song;
+}
 
-//   return (item as PlayList).name;
-// }
-
-// Better to do this:
 function getItemName(item: Song | PlayList) {
-  if (item instanceof Song) {
-    // TS knows this must be a song and will hint song properties
+  if (isSong(item)) {
     return item.title;
   }
 
-  // TS knows this is a playlist and will hint those properties
   return item.name;
 }
 
