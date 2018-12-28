@@ -875,28 +875,110 @@
 
 
 
+// /**
+//  * User Defined Type Guards
+//  */
+
+
+// class Song {
+//   constructor(public title: string, public duration: number) {}
+// }
+
+// class PlayList {
+//   constructor(public name: string, public songs: Song[]) {}
+// }
+
+// // If this function returns true, it must be a song
+// // and TS uses this as a type guard
+// // This only allows a boolean return because "item is Song" is a boolean return type
+// function isSong(item: any): item is Song {
+//   return item instanceof Song;
+// }
+
+// function getItemName(item: Song | PlayList) {
+//   if (isSong(item)) {
+//     return item.title;
+//   }
+
+//   return item.name;
+// }
+
+// const songName = getItemName(new Song('Blah', 303030000));
+// console.log('songName = ', songName);
+
+// const playlistName = getItemName(
+//   new PlayList('The Best Songs', [ new Song('Blah de bla', 300000)])
+// );
+// console.log('playlistName = ', playlistName);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * User Defined Type Guards
+ * Literal Type Guards and "in" Operator
  */
+
+ // Does the window object have a property "localStorage"
+ // This is NOT the same things as "const exists = window.localStorage"
+ // because that would give the VALUE of the property if it existed
+//  const exists = 'localStorage' in window;
+//  console.log('exists = ', exists);
+
+//  // for (const prop in obj) {}
+
+//  // This would mean foo has a LITERAL type of "bar"
+//  const foo = 'bar';
+
+//  // This explicitly types it to a string
+//  const foo2: string = "bar";
+ 
+
 
 
 class Song {
+  // The type of kind is song
+  kind: 'song';
   constructor(public title: string, public duration: number) {}
 }
 
 class PlayList {
+  // The type of kinds is playlist;
+  kind: 'playlist';
   constructor(public name: string, public songs: Song[]) {}
 }
 
-// If this function returns true, it must be a song
-// and TS uses this as a type guard
-// This only allows a boolean return because "item is Song" is a boolean return type
 function isSong(item: any): item is Song {
-  return item instanceof Song;
+  // If the property "title" exists in the item
+  return 'title' in item;
 }
 
 function getItemName(item: Song | PlayList) {
-  if (isSong(item)) {
+  // Method using 'in'
+  // if (isSong(item)) {
+  //   return item.title;
+  // }
+
+  // Method using literal type guards
+  if (item.kind === 'song') {
     return item.title;
   }
 
@@ -910,4 +992,3 @@ const playlistName = getItemName(
   new PlayList('The Best Songs', [ new Song('Blah de bla', 300000)])
 );
 console.log('playlistName = ', playlistName);
-
