@@ -715,45 +715,136 @@
 
 
 
+// /**
+//  * typeof and Type Guards
+//  * 
+//  * Get type information after making a chech inside a conditional
+//  */
+
+// function foo(bar: string | number) {
+//   if (typeof bar === 'string') {
+//     // string!
+//     return bar.toUpperCase();
+//   }
+//   // must be a number and TS is aware of this and will only allow number
+// }
+
+
+// class Song {
+//   constructor(public title: string, public duration: string | number) {}
+// }
+
+// function getSongDuration(item: Song) {
+//   if (typeof item.duration === 'string') {
+//     return item.duration;
+//   } 
+
+//   // TS knows this must be a number
+//   // return item.duration;
+
+//   const { duration } = item;
+//   const minutes = Math.floor( duration/ 60000);
+//   const seconds = duration / 1000 % 60;
+//   return `${minutes}:${seconds}`;
+// }
+
+// const songDurationFromString = getSongDuration(
+//   new Song('Wonderfu', '05:31')
+// );
+// console.log('songDurationFromString = ', songDurationFromString);
+
+// const songDurationFromMs = getSongDuration(
+//   new Song('Bad Bad Bad', 330000)
+// );
+// console.log('songDurationFromMs = ', songDurationFromMs);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * typeof and Type Guards
- * 
- * Get type information after making a chech inside a conditional
+ * instanceof and Type Guards
  */
 
-function foo(bar: string | number) {
-  if (typeof bar === 'string') {
-    // string!
-    return bar.toUpperCase();
-  }
-  // must be a number and TS is aware of this and will only allow number
+class Foo {
+  bar() {}
 }
+
+// ^^ This class would compile to the following ES5 code:
+// function Foo() {}
+// Foo.prototype.bar = function() {};
+
+const bar = new Foo();
+// This is basically asking if "bar" is a prototype of foo
+console.log(Object.getPrototypeOf(bar) === Foo.prototype);
+
+// Easier method
+console.log(bar instanceof Foo);
+
+
 
 
 class Song {
-  constructor(public title: string, public duration: string | number) {}
+  constructor(public title: string, public duration: number) {}
 }
 
-function getSongDuration(item: Song) {
-  if (typeof item.duration === 'string') {
-    return item.duration;
-  } 
-
-  // TS knows this must be a number
-  // return item.duration;
-
-  const { duration } = item;
-  const minutes = Math.floor( duration/ 60000);
-  const seconds = duration / 1000 % 60;
-  return `${minutes}:${seconds}`;
+class PlayList {
+  constructor(public name: string, public songs: Song[]) {}
 }
 
-const songDurationFromString = getSongDuration(
-  new Song('Wonderfu', '05:31')
-);
-console.log('songDurationFromString = ', songDurationFromString);
+// // If you wanted to use TS to type the item manually, 
+// could do this with type assertions
+// function getItemName(item: Song | PlayList) {
+//   if((item as Song).title) {
+//     return (item as Song).title;
+//   }
 
-const songDurationFromMs = getSongDuration(
-  new Song('Bad Bad Bad', 330000)
+//   return (item as PlayList).name;
+// }
+
+// Better to do this:
+function getItemName(item: Song | PlayList) {
+  if (item instanceof Song) {
+    // TS knows this must be a song and will hint song properties
+    return item.title;
+  }
+
+  // TS knows this is a playlist and will hint those properties
+  return item.name;
+}
+
+const songName = getItemName(new Song('Blah', 303030000));
+console.log('songName = ', songName);
+
+const playlistName = getItemName(
+  new PlayList('The Best Songs', [ new Song('Blah de bla', 300000)])
 );
-console.log('songDurationFromMs = ', songDurationFromMs);
+console.log('playlistName = ', playlistName);
+
