@@ -516,56 +516,116 @@
 
 
 
-/**
- * "Required" Mapped Type and Modifiers
- */
+// /**
+//  * "Required" Mapped Type and Modifiers
+//  */
 
-interface Person {
-  name: string;
-  age?: number;
-}
+// interface Person {
+//   name: string;
+//   age?: number;
+// }
 
+
+// // // Modify the referenced type <T>
+// // // type MyRequired<T> = {
+// // type MyRequired<T> = {
+// //   // NOTE: TS has need "operators".  The 2 lines below do the same thing.  The "+" is new
+// //   // The both add the optional choice to the property
+// //   // [P in keyof T]? : T[P];
+// //   // [P in keyof T]+? : T[P];
+// //   // The "-" means remove the option choice to required the property
+// //   // [P in keyof T]-?: T[P];
+// //   [P in keyof T]-?: T[P];
+// // }
 
 // // Modify the referenced type <T>
 // // type MyRequired<T> = {
+
 // type MyRequired<T> = {
-//   // NOTE: TS has need "operators".  The 2 lines below do the same thing.  The "+" is new
+//   // NOTE: TS has new "operators".  The 2 lines below do the same thing.  The "+" is new
 //   // The both add the optional choice to the property
 //   // [P in keyof T]? : T[P];
 //   // [P in keyof T]+? : T[P];
 //   // The "-" means remove the option choice to required the property
 //   // [P in keyof T]-?: T[P];
 //   [P in keyof T]-?: T[P];
+// };
+
+// // If the person did not have an age, we'd get an undefined here
+// function printAge(person: MyRequired<Person>) {
+//   return `${person.name} is ${person.age}`;
 // }
 
-// Modify the referenced type <T>
-// type MyRequired<T> = {
+// const person: Person = {
+//   name: 'Justin',
+// }
 
-type MyRequired<T> = {
-  // NOTE: TS has new "operators".  The 2 lines below do the same thing.  The "+" is new
-  // The both add the optional choice to the property
-  // [P in keyof T]? : T[P];
-  // [P in keyof T]+? : T[P];
-  // The "-" means remove the option choice to required the property
-  // [P in keyof T]-?: T[P];
-  [P in keyof T]-?: T[P];
-};
+// // Not allowed because person.age is missing
+// // console.log(printAge(person));
 
-// If the person did not have an age, we'd get an undefined here
-function printAge(person: MyRequired<Person>) {
-  return `${person.name} is ${person.age}`;
+// const person2: MyRequired<Person> = {
+//   name: 'Justin',
+//   age: 49
+// };
+
+// console.log(printAge(person2));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * “Pick” Mapped Type
+ * 
+ * Like lodash pluck : ask for a particular property of an object.  Just tell
+ * the compiler you want a specific set of the keys for a type
+ */
+
+ interface Person {
+   name: string;
+   age: number;
+   address: {}
+ }
+
+ // T and K are generic types
+ // T is the interface person
+type MyPick<T, K extends keyof T> = {
+  // If property exists in K, return its type
+  [P in K]: T[P];
 }
 
-const person: Person = {
-  name: 'Justin',
-}
+// Type this using only name and age from the person interface
+// Nice for avoiding making address optional in the interface
+ const person: MyPick<Person, 'name' | 'age'> = {
+   name: 'Justin',
+   age: 49,
+ };
 
-// Not allowed because person.age is missing
-// console.log(printAge(person));
-
-const person2: MyRequired<Person> = {
-  name: 'Justin',
-  age: 49
-};
-
-console.log(printAge(person2));
+ // NOTE : Pick is supported directly in TSC now:
+ const person2: Pick<Person, 'name' | 'age'> = {
+   name: 'Justin',
+   age: 49,
+ }
