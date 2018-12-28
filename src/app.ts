@@ -656,40 +656,104 @@
 
 
 
-/**
- * "Record" Mapped Type
- * 
- * Used when adopting the "dictionary" pattern
- */
+// /**
+//  * "Record" Mapped Type
+//  * 
+//  * Used when adopting the "dictionary" pattern
+//  */
 
- // This says the key will be a string and the value will be of type "any"
- // which is not desirable
-// let dictionary: { [key: string]: any } = {};
+//  // This says the key will be a string and the value will be of type "any"
+//  // which is not desirable
+// // let dictionary: { [key: string]: any } = {};
 
-let dictionary: Record<string, TrackStates> = {};
+// let dictionary: Record<string, TrackStates> = {};
 
-// NOTE: If you didn't use the interface you could do
-// let dictionary: Record<string, typeof item> = {};
+// // NOTE: If you didn't use the interface you could do
+// // let dictionary: Record<string, typeof item> = {};
 
-interface TrackStates {
-  current: string;
-  next: string;
-}
+// interface TrackStates {
+//   current: string;
+//   next: string;
+// }
 
-// So, telling the Record type that current and next will be strings.
-// However, hard coding them is rigid
-// const item: Record<'current' | 'next', string> = {
+// // So, telling the Record type that current and next will be strings.
+// // However, hard coding them is rigid
+// // const item: Record<'current' | 'next', string> = {
+// //   current: 'jsjskeke',
+// //   next: 'ekdfkdk',
+// // };
+// // Use keyof to get a union type
+// const item: Record<keyof TrackStates, string> = {
 //   current: 'jsjskeke',
 //   next: 'ekdfkdk',
 // };
-// Use keyof to get a union type
-const item: Record<keyof TrackStates, string> = {
-  current: 'jsjskeke',
-  next: 'ekdfkdk',
-};
 
 
 
-// In Javascript, the index for an array is coerced to a string
-// So, for the dictionary typing above, it matches the string
-dictionary[0] = item;
+// // In Javascript, the index for an array is coerced to a string
+// // So, for the dictionary typing above, it matches the string
+// dictionary[0] = item;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * typeof and Type Guards
+ * 
+ * Get type information after making a chech inside a conditional
+ */
+
+function foo(bar: string | number) {
+  if (typeof bar === 'string') {
+    // string!
+    return bar.toUpperCase();
+  }
+  // must be a number and TS is aware of this and will only allow number
+}
+
+
+class Song {
+  constructor(public title: string, public duration: string | number) {}
+}
+
+function getSongDuration(item: Song) {
+  if (typeof item.duration === 'string') {
+    return item.duration;
+  } 
+
+  // TS knows this must be a number
+  // return item.duration;
+
+  const { duration } = item;
+  const minutes = Math.floor( duration/ 60000);
+  const seconds = duration / 1000 % 60;
+  return `${minutes}:${seconds}`;
+}
+
+const songDurationFromString = getSongDuration(
+  new Song('Wonderfu', '05:31')
+);
+console.log('songDurationFromString = ', songDurationFromString);
+
+const songDurationFromMs = getSongDuration(
+  new Song('Bad Bad Bad', 330000)
+);
+console.log('songDurationFromMs = ', songDurationFromMs);
