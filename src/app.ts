@@ -435,76 +435,137 @@
 
 
 
-/**
- * "Partial" Mapped Type
- */
+// /**
+//  * "Partial" Mapped Type
+//  */
 
+
+// interface Person {
+//   name: string;
+//   age: number;
+// }
+
+// interface PartialPerson {
+//   name?: string;
+//   age?: number;
+// }
+
+// // Update a person object with just partial information while using types
+// function updatePerson(person: Person, prop: PartialPerson) {
+//   return { ...person, ...prop };
+// }
+
+// const person: Person = {
+//   name: 'Todd',
+//   age: 27
+// };
+
+// const newPerson = updatePerson(person, { name: 'Justin' });
+// console.log(newPerson);
+
+
+// // ^^^^ the above is painful because you have to maintain 2 different interfaces.
+// // If you change one, you have to change the other
+// ////////////////////////////////////////////////////////////////////////
+// // New version using partial mapped type
+// // IMPORTANT : Creating a MyPartial is not really necessary because TS
+// // already have a `Partial` type
+
+// interface Person2 {
+//   name: string;
+//   age: number;
+// }
+
+// // Create a custom type
+// type MyPartial<T> = {
+//   // For each property in the reference type, return a type with that
+//   // property name that is optional
+//   [P in keyof T]?: T[P]
+// }
+
+// // Update a person object with just partial information while using types
+// function updatePerson2(person: Person2, prop: MyPartial<Person>) {
+//   return { ...person, ...prop };
+// }
+
+// const person2: Person2 = {
+//   name: 'Todd',
+//   age: 27
+// };
+
+// const newPerson2 = updatePerson2(person2, { name: 'Justin' });
+// console.log(newPerson2);
+
+
+// // ^^^^ the above is painful because you have to maintain 2 different interfaces.
+// // If you change one, you have to change the other
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * "Required" Mapped Type and Modifiers
+ */
 
 interface Person {
   name: string;
-  age: number;
-}
-
-interface PartialPerson {
-  name?: string;
   age?: number;
 }
 
-// Update a person object with just partial information while using types
-function updatePerson(person: Person, prop: PartialPerson) {
-  return { ...person, ...prop };
+
+// // Modify the referenced type <T>
+// // type MyRequired<T> = {
+// type MyRequired<T> = {
+//   // NOTE: TS has need "operators".  The 2 lines below do the same thing.  The "+" is new
+//   // The both add the optional choice to the property
+//   // [P in keyof T]? : T[P];
+//   // [P in keyof T]+? : T[P];
+//   // The "-" means remove the option choice to required the property
+//   // [P in keyof T]-?: T[P];
+//   [P in keyof T]-?: T[P];
+// }
+
+// Modify the referenced type <T>
+// type MyRequired<T> = {
+
+type MyRequired<T> = {
+  // NOTE: TS has new "operators".  The 2 lines below do the same thing.  The "+" is new
+  // The both add the optional choice to the property
+  // [P in keyof T]? : T[P];
+  // [P in keyof T]+? : T[P];
+  // The "-" means remove the option choice to required the property
+  // [P in keyof T]-?: T[P];
+  [P in keyof T]-?: T[P];
+};
+
+// If the person did not have an age, we'd get an undefined here
+function printAge(person: MyRequired<Person>) {
+  return `${person.name} is ${person.age}`;
 }
 
 const person: Person = {
-  name: 'Todd',
-  age: 27
+  name: 'Justin',
+}
+
+// Not allowed because person.age is missing
+// console.log(printAge(person));
+
+const person2: MyRequired<Person> = {
+  name: 'Justin',
+  age: 49
 };
 
-const newPerson = updatePerson(person, { name: 'Justin' });
-console.log(newPerson);
-
-
-// ^^^^ the above is painful because you have to maintain 2 different interfaces.
-// If you change one, you have to change the other
-////////////////////////////////////////////////////////////////////////
-// New version using partial mapped type
-// IMPORTANT : Creating a MyPartial is not really necessary because TS
-// already have a `Partial` type
-
-interface Person2 {
-  name: string;
-  age: number;
-}
-
-// Create a custom type
-type MyPartial<T> = {
-  // For each property in the reference type, return a type with that
-  // property name that is optional
-  [P in keyof T]?: T[P]
-}
-
-// Update a person object with just partial information while using types
-function updatePerson2(person: Person2, prop: MyPartial<Person>) {
-  return { ...person, ...prop };
-}
-
-const person2: Person2 = {
-  name: 'Todd',
-  age: 27
-};
-
-const newPerson2 = updatePerson2(person2, { name: 'Justin' });
-console.log(newPerson2);
-
-
-// ^^^^ the above is painful because you have to maintain 2 different interfaces.
-// If you change one, you have to change the other
-
-
-
-
-
-
-
-
-
+console.log(printAge(person2));
