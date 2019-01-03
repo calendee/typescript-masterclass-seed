@@ -1191,40 +1191,108 @@
 
 
 
+// /**
+//  * Interfaces vs Type Aliases
+//  * 
+//  * Generally interfaces are preferred
+//  */
+
+// interface Item {
+//   name: string;
+// }
+
+// // Can be extended
+//  interface Artist extends Item {
+//    songs: number;
+//  }
+
+//  // This is a type alias
+//  // Cannot be extended but can use intersection
+//  type Artist2 = {
+//    name: string;
+//  } & Item;
+
+//  // You can merge the declaration of interfaces
+//  interface Artist {
+//   // See how this continues the original Interface "Artist" and merges 
+//   // more properties onto it - which cannot be done with a type alias
+//   // However, this is frowned upon - the original interface should have
+//   // had all required properties;
+//    getSongs(): number;
+//  }
+
+//  const newArtist: Artist = {
+//   name: 'ABC',
+//   songs: 5,
+//   getSongs() {
+//     return this.songs;
+//   }
+//  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Interfaces vs Type Aliases
- * 
- * Generally interfaces are preferred
+ * Interface vs Classes
  */
 
-interface Item {
+ // Class: blueprint to create an object that shares the same
+ // properties, information, and methods
+
+// Interface : group of related properties and methods that
+// describe an object.  Provided no implemenation details nor
+// does it allow you to initialize an object
+
+// Should use class or interface?
+// Depends on if you just want to do type checking or provide
+// implementation details
+
+// Provides no implementation details - only type checking
+interface Artist {
   name: string;
 }
 
-// Can be extended
- interface Artist extends Item {
-   songs: number;
- }
+function artistFactory({ name }: Artist) {
+  // return {
+  //   id: 'abc123',
+  //   name
+  // };
 
- // This is a type alias
- // Cannot be extended but can use intersection
- type Artist2 = {
-   name: string;
- } & Item;
+  return new ArtistCreator(name);
+}
 
- // You can merge the declaration of interfaces
- interface Artist {
-  // See how this continues the original Interface "Artist" and merges 
-  // more properties onto it - which cannot be done with a type alias
-  // However, this is frowned upon - the original interface should have
-  // had all required properties;
-   getSongs(): number;
- }
+class ArtistCreator implements Artist {
+  constructor(public name: string) {}
+}
 
- const newArtist: Artist = {
-  name: 'ABC',
-  songs: 5,
-  getSongs() {
-    return this.songs;
-  }
- }
+artistFactory({ name: 'Justin' });
