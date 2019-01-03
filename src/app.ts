@@ -933,62 +933,137 @@
 
 
 
-/**
- * Literal Type Guards and "in" Operator
- */
+// /**
+//  * Literal Type Guards and "in" Operator
+//  */
 
- // Does the window object have a property "localStorage"
- // This is NOT the same things as "const exists = window.localStorage"
- // because that would give the VALUE of the property if it existed
-//  const exists = 'localStorage' in window;
-//  console.log('exists = ', exists);
+//  // Does the window object have a property "localStorage"
+//  // This is NOT the same things as "const exists = window.localStorage"
+//  // because that would give the VALUE of the property if it existed
+// //  const exists = 'localStorage' in window;
+// //  console.log('exists = ', exists);
 
-//  // for (const prop in obj) {}
+// //  // for (const prop in obj) {}
 
-//  // This would mean foo has a LITERAL type of "bar"
-//  const foo = 'bar';
+// //  // This would mean foo has a LITERAL type of "bar"
+// //  const foo = 'bar';
 
-//  // This explicitly types it to a string
-//  const foo2: string = "bar";
+// //  // This explicitly types it to a string
+// //  const foo2: string = "bar";
  
 
 
 
-class Song {
-  // The type of kind is song
-  kind: 'song';
-  constructor(public title: string, public duration: number) {}
+// class Song {
+//   // The type of kind is song
+//   kind: 'song';
+//   constructor(public title: string, public duration: number) {}
+// }
+
+// class PlayList {
+//   // The type of kinds is playlist;
+//   kind: 'playlist';
+//   constructor(public name: string, public songs: Song[]) {}
+// }
+
+// function isSong(item: any): item is Song {
+//   // If the property "title" exists in the item
+//   return 'title' in item;
+// }
+
+// function getItemName(item: Song | PlayList) {
+//   // Method using 'in'
+//   // if (isSong(item)) {
+//   //   return item.title;
+//   // }
+
+//   // Method using literal type guards
+//   if (item.kind === 'song') {
+//     return item.title;
+//   }
+
+//   return item.name;
+// }
+
+// const songName = getItemName(new Song('Blah', 303030000));
+// console.log('songName = ', songName);
+
+// const playlistName = getItemName(
+//   new PlayList('The Best Songs', [ new Song('Blah de bla', 300000)])
+// );
+// console.log('playlistName = ', playlistName);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Intersection Types
+ * 
+ * Describe that you can combined multiple types together rather than extending interfaces
+ */
+
+
+interface Order {
+  id: string;
+  amount: number;
+  currency: string;
 }
 
-class PlayList {
-  // The type of kinds is playlist;
-  kind: 'playlist';
-  constructor(public name: string, public songs: Song[]) {}
+interface Stripe {
+  card: string;
+  cvc: string;
 }
 
-function isSong(item: any): item is Song {
-  // If the property "title" exists in the item
-  return 'title' in item;
+interface PayPal {
+  email: string;
 }
 
-function getItemName(item: Song | PlayList) {
-  // Method using 'in'
-  // if (isSong(item)) {
-  //   return item.title;
-  // }
+// Creates a type that joins one type with another
+type CheckoutCard = Order & Stripe;
+type CheckoutPayPal = Order & PayPal;
+// Create a type from an interface and self-defined types
+// type CheckoutABC = Order & { name: string };
 
-  // Method using literal type guards
-  if (item.kind === 'song') {
-    return item.title;
-  }
+const order: Order = {
+  id: 'abc123',
+  amount: 100,
+  currency: 'USD'
+};
 
-  return item.name;
-}
+const orderCard: CheckoutCard = {
+  ...order,
+  card: '1000 2000 3000 4000',
+  cvc: '123',
+};
 
-const songName = getItemName(new Song('Blah', 303030000));
-console.log('songName = ', songName);
+const orderPayPal: CheckoutPayPal = {
+  ...order,
+  email: 'abc@123.com'
+};
 
-const playlistName = getItemName(
-  new PlayList('The Best Songs', [ new Song('Blah de bla', 300000)])
-);
-console.log('playlistName = ', playlistName);
+// The OLD way before spread
+// NOTE: If no type provided, TS infers CheckoutCard because `assign` has TS 
+// definitions that use the intersection of the passed in object types
+const assigned: CheckoutCard = Object.assign({}, order, orderCard);
