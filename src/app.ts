@@ -1018,12 +1018,81 @@
 
 
 
-/**
- * Intersection Types
- * 
- * Describe that you can combined multiple types together rather than extending interfaces
- */
+// /**
+//  * Intersection Types
+//  * 
+//  * Describe that you can combined multiple types together rather than extending interfaces
+//  */
 
+
+// interface Order {
+//   id: string;
+//   amount: number;
+//   currency: string;
+// }
+
+// interface Stripe {
+//   card: string;
+//   cvc: string;
+// }
+
+// interface PayPal {
+//   email: string;
+// }
+
+// // Creates a type that joins one type with another
+// type CheckoutCard = Order & Stripe;
+// type CheckoutPayPal = Order & PayPal;
+// // Create a type from an interface and self-defined types
+// // type CheckoutABC = Order & { name: string };
+
+// const order: Order = {
+//   id: 'abc123',
+//   amount: 100,
+//   currency: 'USD'
+// };
+
+// const orderCard: CheckoutCard = {
+//   ...order,
+//   card: '1000 2000 3000 4000',
+//   cvc: '123',
+// };
+
+// const orderPayPal: CheckoutPayPal = {
+//   ...order,
+//   email: 'abc@123.com'
+// };
+
+// // The OLD way before spread
+// // NOTE: If no type provided, TS infers CheckoutCard because `assign` has TS 
+// // definitions that use the intersection of the passed in object types
+// const assigned: CheckoutCard = Object.assign({}, order, orderCard);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Discriminated ( or Tagged ) Union Type
+ */
 
 interface Order {
   id: string;
@@ -1032,19 +1101,21 @@ interface Order {
 }
 
 interface Stripe {
+  // Used later to discriminate the order in the checkout
+  // This is a string literal type
+  type: 'stripe';
   card: string;
   cvc: string;
 }
 
 interface PayPal {
+  // Used later to discriminate the order in the checkout
+  type: 'paypal';
   email: string;
 }
 
-// Creates a type that joins one type with another
 type CheckoutCard = Order & Stripe;
 type CheckoutPayPal = Order & PayPal;
-// Create a type from an interface and self-defined types
-// type CheckoutABC = Order & { name: string };
 
 const order: Order = {
   id: 'abc123',
@@ -1056,14 +1127,32 @@ const orderCard: CheckoutCard = {
   ...order,
   card: '1000 2000 3000 4000',
   cvc: '123',
+  type: 'stripe'
 };
 
 const orderPayPal: CheckoutPayPal = {
   ...order,
-  email: 'abc@123.com'
+  email: 'abc@123.com',
+  type: 'paypal',
 };
 
-// The OLD way before spread
-// NOTE: If no type provided, TS infers CheckoutCard because `assign` has TS 
-// definitions that use the intersection of the passed in object types
-const assigned: CheckoutCard = Object.assign({}, order, orderCard);
+// The payload type will be one or the other
+// This is a Union type
+type Payload = CheckoutCard | CheckoutPayPal;
+
+function checkout(payload: Payload) {
+  // Without the "type" property in PayPal and CreditCard,
+  // typing `payload.` would autosuggest order properties but not checkout 
+  // properties because it doesn't know what type of checkout properties exist (card or paypal)
+
+  if(payload.type === 'stripe') {
+    // Now that we've discriminated the type, TS will hint only CheckoutCard properties
+    console.log(payload.card, payload.cvc);
+  }
+
+  if (payload.type === 'paypal') {
+    // Now that we've discriminated the type, TS will hint only CheckoutPayPal properties
+    console.log(payload.email);
+  }
+}
+
