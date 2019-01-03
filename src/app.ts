@@ -1090,69 +1090,141 @@
 
 
 
+// /**
+//  * Discriminated ( or Tagged ) Union Type
+//  */
+
+// interface Order {
+//   id: string;
+//   amount: number;
+//   currency: string;
+// }
+
+// interface Stripe {
+//   // Used later to discriminate the order in the checkout
+//   // This is a string literal type
+//   type: 'stripe';
+//   card: string;
+//   cvc: string;
+// }
+
+// interface PayPal {
+//   // Used later to discriminate the order in the checkout
+//   type: 'paypal';
+//   email: string;
+// }
+
+// type CheckoutCard = Order & Stripe;
+// type CheckoutPayPal = Order & PayPal;
+
+// const order: Order = {
+//   id: 'abc123',
+//   amount: 100,
+//   currency: 'USD'
+// };
+
+// const orderCard: CheckoutCard = {
+//   ...order,
+//   card: '1000 2000 3000 4000',
+//   cvc: '123',
+//   type: 'stripe'
+// };
+
+// const orderPayPal: CheckoutPayPal = {
+//   ...order,
+//   email: 'abc@123.com',
+//   type: 'paypal',
+// };
+
+// // The payload type will be one or the other
+// // This is a Union type
+// type Payload = CheckoutCard | CheckoutPayPal;
+
+// function checkout(payload: Payload) {
+//   // Without the "type" property in PayPal and CreditCard,
+//   // typing `payload.` would autosuggest order properties but not checkout 
+//   // properties because it doesn't know what type of checkout properties exist (card or paypal)
+
+//   if(payload.type === 'stripe') {
+//     // Now that we've discriminated the type, TS will hint only CheckoutCard properties
+//     console.log(payload.card, payload.cvc);
+//   }
+
+//   if (payload.type === 'paypal') {
+//     // Now that we've discriminated the type, TS will hint only CheckoutPayPal properties
+//     console.log(payload.email);
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Discriminated ( or Tagged ) Union Type
+ * Interfaces vs Type Aliases
+ * 
+ * Generally interfaces are preferred
  */
 
-interface Order {
-  id: string;
-  amount: number;
-  currency: string;
+interface Item {
+  name: string;
 }
 
-interface Stripe {
-  // Used later to discriminate the order in the checkout
-  // This is a string literal type
-  type: 'stripe';
-  card: string;
-  cvc: string;
-}
+// Can be extended
+ interface Artist extends Item {
+   songs: number;
+ }
 
-interface PayPal {
-  // Used later to discriminate the order in the checkout
-  type: 'paypal';
-  email: string;
-}
+ // This is a type alias
+ // Cannot be extended but can use intersection
+ type Artist2 = {
+   name: string;
+ } & Item;
 
-type CheckoutCard = Order & Stripe;
-type CheckoutPayPal = Order & PayPal;
+ // You can merge the declaration of interfaces
+ interface Artist {
+  // See how this continues the original Interface "Artist" and merges 
+  // more properties onto it - which cannot be done with a type alias
+  // However, this is frowned upon - the original interface should have
+  // had all required properties;
+   getSongs(): number;
+ }
 
-const order: Order = {
-  id: 'abc123',
-  amount: 100,
-  currency: 'USD'
-};
-
-const orderCard: CheckoutCard = {
-  ...order,
-  card: '1000 2000 3000 4000',
-  cvc: '123',
-  type: 'stripe'
-};
-
-const orderPayPal: CheckoutPayPal = {
-  ...order,
-  email: 'abc@123.com',
-  type: 'paypal',
-};
-
-// The payload type will be one or the other
-// This is a Union type
-type Payload = CheckoutCard | CheckoutPayPal;
-
-function checkout(payload: Payload) {
-  // Without the "type" property in PayPal and CreditCard,
-  // typing `payload.` would autosuggest order properties but not checkout 
-  // properties because it doesn't know what type of checkout properties exist (card or paypal)
-
-  if(payload.type === 'stripe') {
-    // Now that we've discriminated the type, TS will hint only CheckoutCard properties
-    console.log(payload.card, payload.cvc);
+ const newArtist: Artist = {
+  name: 'ABC',
+  songs: 5,
+  getSongs() {
+    return this.songs;
   }
-
-  if (payload.type === 'paypal') {
-    // Now that we've discriminated the type, TS will hint only CheckoutPayPal properties
-    console.log(payload.email);
-  }
-}
-
+ }
