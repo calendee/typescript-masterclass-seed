@@ -1262,37 +1262,132 @@
 
 
 
+// /**
+//  * Interface vs Classes
+//  */
+
+//  // Class: blueprint to create an object that shares the same
+//  // properties, information, and methods
+
+// // Interface : group of related properties and methods that
+// // describe an object.  Provided no implemenation details nor
+// // does it allow you to initialize an object
+
+// // Should use class or interface?
+// // Depends on if you just want to do type checking or provide
+// // implementation details
+
+// // Provides no implementation details - only type checking
+// interface Artist {
+//   name: string;
+// }
+
+// function artistFactory({ name }: Artist) {
+//   // return {
+//   //   id: 'abc123',
+//   //   name
+//   // };
+
+//   return new ArtistCreator(name);
+// }
+
+// class ArtistCreator implements Artist {
+//   constructor(public name: string) {}
+// }
+
+// artistFactory({ name: 'Justin' });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Interface vs Classes
+ * Function Generics
+ * 
+ * Create a form of dynamic type
  */
 
- // Class: blueprint to create an object that shares the same
- // properties, information, and methods
+ class Pizza {
+   constructor(private name: string, private price: number) {}
+ }
 
-// Interface : group of related properties and methods that
-// describe an object.  Provided no implemenation details nor
-// does it allow you to initialize an object
+class List {
+  
+  private list: any[] = [];
 
-// Should use class or interface?
-// Depends on if you just want to do type checking or provide
-// implementation details
+  // A generic type
+  // private list: Array<any>
 
-// Provides no implementation details - only type checking
-interface Artist {
-  name: string;
+  // COULD specify what things can go in the array like:
+  // private list: Array<Pizza>
+  // however, that means the List can't be reused later as maybe a cookie array
+
+  addItem(item: any): void {
+    this.list.push(item);
+  }
+
+  getList(): any[] {
+    return this.list;
+  }
 }
 
-function artistFactory({ name }: Artist) {
-  // return {
-  //   id: 'abc123',
-  //   name
-  // };
+const list = new List();
+list.addItem(new Pizza('Pepperoni', 15));
 
-  return new ArtistCreator(name);
+// Provides no useful type info because it's just an "any" array
+const pizzas = list.getList();
+
+
+class BetterList<T> {
+  
+  private list: T[];
+      
+  addItem(item: T): void {
+    this.list.push(item);
+  }
+
+  getList(): T[] {
+    return this.list;
+  }
 }
 
-class ArtistCreator implements Artist {
-  constructor(public name: string) {}
+const newList = new BetterList<Pizza>();
+newList.addItem(new Pizza('Pepperoni', 15));
+
+// This fails because TS knows the list should only contain pizzas
+// newList.addItem({ coupon: 'pizza' });
+const newPizzas = newList.getList();
+
+class Coupon { 
+  constructor(private name: string) {}
 }
 
-artistFactory({ name: 'Justin' });
+// The BetterList is now generic and can receive any type of objects
+const couponList = new BetterList<Coupon>();
+couponList.addItem(new Coupon('pizza25'));
+const coupons = couponList.getList();
