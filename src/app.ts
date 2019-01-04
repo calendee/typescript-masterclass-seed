@@ -1326,68 +1326,139 @@
 
 
 
+// /**
+//  * Function Generics
+//  * 
+//  * Create a form of dynamic type
+//  */
+
+//  class Pizza {
+//    constructor(private name: string, private price: number) {}
+//  }
+
+// class List {
+  
+//   private list: any[] = [];
+
+//   // A generic type
+//   // private list: Array<any>
+
+//   // COULD specify what things can go in the array like:
+//   // private list: Array<Pizza>
+//   // however, that means the List can't be reused later as maybe a cookie array
+
+//   addItem(item: any): void {
+//     this.list.push(item);
+//   }
+
+//   getList(): any[] {
+//     return this.list;
+//   }
+// }
+
+// const list = new List();
+// list.addItem(new Pizza('Pepperoni', 15));
+
+// // Provides no useful type info because it's just an "any" array
+// const pizzas = list.getList();
+
+
+// class BetterList<T> {
+  
+//   private list: T[];
+      
+//   addItem(item: T): void {
+//     this.list.push(item);
+//   }
+
+//   getList(): T[] {
+//     return this.list;
+//   }
+// }
+
+// const newList = new BetterList<Pizza>();
+// newList.addItem(new Pizza('Pepperoni', 15));
+
+// // This fails because TS knows the list should only contain pizzas
+// // newList.addItem({ coupon: 'pizza' });
+// const newPizzas = newList.getList();
+
+// class Coupon { 
+//   constructor(private name: string) {}
+// }
+
+// // The BetterList is now generic and can receive any type of objects
+// const couponList = new BetterList<Coupon>();
+// couponList.addItem(new Coupon('pizza25'));
+// const coupons = couponList.getList();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Function Generics
+ * Function Overloads
  * 
- * Create a form of dynamic type
+ * Declare different ways to use a function, great for utility functions
  */
 
- class Pizza {
-   constructor(private name: string, private price: number) {}
- }
+// These are overload functions that TS uses to hint the 
+// parameter type and return type
+// This will NOT appear in the final compiled JS
+function reverse(str: string): string;
+// This provides a generic array type which is limiting
+// function reverse(arr: any[]): any[];
+// Use generic types to improve they array hinting
+function reverse<T>(arr: T[]): T[];
 
-class List {
-  
-  private list: any[] = [];
-
-  // A generic type
-  // private list: Array<any>
-
-  // COULD specify what things can go in the array like:
-  // private list: Array<Pizza>
-  // however, that means the List can't be reused later as maybe a cookie array
-
-  addItem(item: any): void {
-    this.list.push(item);
+// This is the implementation function and will be in the final compiled JS
+function reverse<T>(arrayOrString: string | T[]): string | T[] {
+  if (typeof arrayOrString === 'string') {
+    return arrayOrString
+    .split('')
+    .reverse()
+    .join('');
   }
 
-  getList(): any[] {
-    return this.list;
-  }
+  // Copy it so we're not mutating the passed in array
+  return arrayOrString.slice().reverse();
 }
 
-const list = new List();
-list.addItem(new Pizza('Pepperoni', 15));
+const toppings = ['bacon', 'pepperoni', 'chili'];
+const backwards = reverse('Pepperoni');
+console.log('backwards = ', backwards);
+const newToppings = reverse<String>(toppings);
+console.log('Toppings = ', toppings);
+console.log('newToppings = ', newToppings);
 
-// Provides no useful type info because it's just an "any" array
-const pizzas = list.getList();
+const numbers = reverse<Number>([1, 2, 3]);
 
-
-class BetterList<T> {
-  
-  private list: T[];
-      
-  addItem(item: T): void {
-    this.list.push(item);
-  }
-
-  getList(): T[] {
-    return this.list;
-  }
-}
-
-const newList = new BetterList<Pizza>();
-newList.addItem(new Pizza('Pepperoni', 15));
-
-// This fails because TS knows the list should only contain pizzas
-// newList.addItem({ coupon: 'pizza' });
-const newPizzas = newList.getList();
-
-class Coupon { 
-  constructor(private name: string) {}
-}
-
-// The BetterList is now generic and can receive any type of objects
-const couponList = new BetterList<Coupon>();
-couponList.addItem(new Coupon('pizza25'));
-const coupons = couponList.getList();
+// Without the overloads, typing `reverse` would provide useless type information
+// The overloads will allow TS to tell you what can be passed in as an argument
+// and what will be returns;
