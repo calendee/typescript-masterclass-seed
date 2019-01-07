@@ -1,4 +1,8 @@
-// index.d.ts : `d` stands for declaration
+import * as lodash from 'lodash';
 declare module 'lodash' {
-  export function chunk(collection: any, size?: number): any[][];
+  // Merge the declarations of the interface
+  // Called an "ambient module"
+  interface LoDashStatic {
+    log(item: string): void;
+  }
 }

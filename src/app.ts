@@ -1673,12 +1673,64 @@
 
 
 
+// /**
+//  * Writing Declaration Files
+//  * 
+//  * declaring some form of types for files written in JS
+//  */
+
+//  import * as _ from 'lodash';
+//  _.chunk([1, 2, 3, 4], 2);
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Writing Declaration Files
- * 
- * declaring some form of types for files written in JS
+ * Augmenting Modules with Declarations
  */
 
- import * as _ from 'lodash';
- _.chunk([1, 2, 3, 4], 2);
- 
+
+import * as _ from 'lodash';
+console.log(_.chunk([1, 2, 3, 4], 2));
+
+// Create a new lodash function
+_.mixin({
+  log(item: string) {
+    console.log(':::', item);
+  }
+});
+
+// works!!
+_.log('Hello!');
+
+// Doesn't work!
+// _.log(12);
