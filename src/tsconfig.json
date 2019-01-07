@@ -1,0 +1,9 @@
+// Extends the general config with specific options for this entire
+// directory.  It merges the base with these below.  It does NOT
+// override all others, just those specific here
+{
+  "extends": "../tsconfig-base",
+  "compilerOptions": {
+    "noImplicitAny": true,
+  }
+}

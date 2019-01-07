@@ -1819,14 +1819,59 @@
 
 
 
+// /**
+//  * Include, Exclude, and Files Properties
+//  * 
+//  * By default, TS will look for ANY `.ts` files and bundle them.
+//  * However, you can also tell the compiler which files to include or exclude
+//  * 
+//  * The priority is files, then include, then exclude.  If a file is included higher
+//  * up, it won't be excluded later
+//  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Include, Exclude, and Files Properties
+ * Configuration Inheritance with Extends
  * 
- * By default, TS will look for ANY `.ts` files and bundle them.
- * However, you can also tell the compiler which files to include or exclude
- * 
- * The priority is files, then include, then exclude.  If a file is included higher
- * up, it won't be excluded later
+ * Inherit from a different tsconfig.json file
  */
 
+function log(message) {}
 
