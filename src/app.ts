@@ -1625,9 +1625,60 @@
 
 
 
+// /**
+//  * DefinelyTyped and @types
+//  */
+// import * as _ from 'lodash';
+//  const sum = _.add(1, 2);
+//  console.log(`Sum = ${sum}`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * DefinelyTyped and @types
+ * Writing Declaration Files
+ * 
+ * declaring some form of types for files written in JS
  */
-import * as _ from 'lodash';
- const sum = _.add(1, 2);
- console.log(`Sum = ${sum}`);
+
+ import * as _ from 'lodash';
+ _.chunk([1, 2, 3, 4], 2);
+ 
