@@ -1767,18 +1767,66 @@
 
 
 
+// /**
+//  * Emitting Declaration Files From tsc
+//  */
+
+
+// // In tsconfig.json, setting the "declaration" property to true will
+// // generate a declarations file for any functions or variables
+// // The file will be in the dist directory `app.d.ts`
+// // Useful when publishing a third part library
+// // Setting the `declarationDir` property will determine where the file is output to
+//  export class Foo {
+//    constructor(public name: string) {}
+
+//    bar(age: number) {}
+//  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Emitting Declaration Files From tsc
+ * Include, Exclude, and Files Properties
+ * 
+ * By default, TS will look for ANY `.ts` files and bundle them.
+ * However, you can also tell the compiler which files to include or exclude
+ * 
+ * The priority is files, then include, then exclude.  If a file is included higher
+ * up, it won't be excluded later
  */
 
 
-// In tsconfig.json, setting the "declaration" property to true will
-// generate a declarations file for any functions or variables
-// The file will be in the dist directory `app.d.ts`
-// Useful when publishing a third part library
-// Setting the `declarationDir` property will determine where the file is output to
- export class Foo {
-   constructor(public name: string) {}
-
-   bar(age: number) {}
- }

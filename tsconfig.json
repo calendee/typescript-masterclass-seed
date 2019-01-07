@@ -1,7 +1,14 @@
 {
+  // Specify exact files
+  // "files": ["src/app.ts"],
+
+  // Specify a glob of files even in subdirectories
+  "include": ["src/**/*.ts", "path2/**/*.ts"],
+
+  // Ignore certain files - like test files
+  "exclude": ["src/**/*.spec.ts"],
+
   "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "./@types",
     "target": "es5",
     "module": "commonjs",
     "lib": ["dom", "es6"],
