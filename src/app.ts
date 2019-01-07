@@ -1553,51 +1553,81 @@
 
 
 
+// /**
+//  * String Enums and Inlining Members
+//  */
+
+//  // New feature of TS allows setting values to strings
+//  // Unfortunately, this doesn't have reverse mappings
+//  enum Sizes {
+//    Small = 'small',
+//    Medium = 'medium',
+//    Large ='large',
+//  }
+
+
+// let selected: Sizes = Sizes.Small;
+
+// function updateSize(size: Sizes) {
+//   selected = size;
+// }
+
+// // Not allowed
+// updateSize('Massive');
+// updateSize('medium');
+
+// updateSize(Sizes.Large);
+// updateSize(Sizes.Medium);
+
+
+// // If you use a `const` in front, it will do `inlining` members instead
+// // of creating a sizes object
+
+// const enum Sizes2 {
+//   Small = 'small',
+//   Medium = 'medium',
+//   Large ='large',
+// }
+
+// let selected2 = 'small';
+
+// function updateSize2(size: Sizes2) {
+//   selected2 = size;
+// }
+
+// // Not allowed because not in enum
+// updateSize2('largest');
+
+// updateSize2(Sizes2.Large);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * String Enums and Inlining Members
+ * DefinelyTyped and @types
  */
-
- // New feature of TS allows setting values to strings
- // Unfortunately, this doesn't have reverse mappings
- enum Sizes {
-   Small = 'small',
-   Medium = 'medium',
-   Large ='large',
- }
-
-
-let selected: Sizes = Sizes.Small;
-
-function updateSize(size: Sizes) {
-  selected = size;
-}
-
-// Not allowed
-updateSize('Massive');
-updateSize('medium');
-
-updateSize(Sizes.Large);
-updateSize(Sizes.Medium);
-
-
-// If you use a `const` in front, it will do `inlining` members instead
-// of creating a sizes object
-
-const enum Sizes2 {
-  Small = 'small',
-  Medium = 'medium',
-  Large ='large',
-}
-
-let selected2 = 'small';
-
-function updateSize2(size: Sizes2) {
-  selected2 = size;
-}
-
-// Not allowed because not in enum
-updateSize2('largest');
-
-updateSize2(Sizes2.Large);
-
-
+import * as _ from 'lodash';
+ const sum = _.add(1, 2);
+ console.log(`Sum = ${sum}`);
