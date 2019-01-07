@@ -1422,43 +1422,96 @@
 
 
 
+// /**
+//  * Function Overloads
+//  * 
+//  * Declare different ways to use a function, great for utility functions
+//  */
+
+// // These are overload functions that TS uses to hint the 
+// // parameter type and return type
+// // This will NOT appear in the final compiled JS
+// function reverse(str: string): string;
+// // This provides a generic array type which is limiting
+// // function reverse(arr: any[]): any[];
+// // Use generic types to improve they array hinting
+// function reverse<T>(arr: T[]): T[];
+
+// // This is the implementation function and will be in the final compiled JS
+// function reverse<T>(arrayOrString: string | T[]): string | T[] {
+//   if (typeof arrayOrString === 'string') {
+//     return arrayOrString
+//     .split('')
+//     .reverse()
+//     .join('');
+//   }
+
+//   // Copy it so we're not mutating the passed in array
+//   return arrayOrString.slice().reverse();
+// }
+
+// const toppings = ['bacon', 'pepperoni', 'chili'];
+// const backwards = reverse('Pepperoni');
+// console.log('backwards = ', backwards);
+// const newToppings = reverse<String>(toppings);
+// console.log('Toppings = ', toppings);
+// console.log('newToppings = ', newToppings);
+
+// const numbers = reverse<Number>([1, 2, 3]);
+
+// // Without the overloads, typing `reverse` would provide useless type information
+// // The overloads will allow TS to tell you what can be passed in as an argument
+// // and what will be returns;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Function Overloads
+ * Numeric Enums and Reverse Mapping
  * 
- * Declare different ways to use a function, great for utility functions
+ * By default, you get numeric values from an enum
  */
 
-// These are overload functions that TS uses to hint the 
-// parameter type and return type
-// This will NOT appear in the final compiled JS
-function reverse(str: string): string;
-// This provides a generic array type which is limiting
-// function reverse(arr: any[]): any[];
-// Use generic types to improve they array hinting
-function reverse<T>(arr: T[]): T[];
-
-// This is the implementation function and will be in the final compiled JS
-function reverse<T>(arrayOrString: string | T[]): string | T[] {
-  if (typeof arrayOrString === 'string') {
-    return arrayOrString
-    .split('')
-    .reverse()
-    .join('');
-  }
-
-  // Copy it so we're not mutating the passed in array
-  return arrayOrString.slice().reverse();
+enum Sizes {
+  Small, Medium, Large
 }
 
-const toppings = ['bacon', 'pepperoni', 'chili'];
-const backwards = reverse('Pepperoni');
-console.log('backwards = ', backwards);
-const newToppings = reverse<String>(toppings);
-console.log('Toppings = ', toppings);
-console.log('newToppings = ', newToppings);
+// If adding more declarations, must include the index
+enum Sizes {
+  ExtraLarge = 3,
+}
 
-const numbers = reverse<Number>([1, 2, 3]);
+console.log(Sizes.Medium);
+console.log(Sizes[2], Sizes.Large, Sizes[Sizes.Large]);
 
-// Without the overloads, typing `reverse` would provide useless type information
-// The overloads will allow TS to tell you what can be passed in as an argument
-// and what will be returns;
+const selectedSize = 2;
+console.log(`Selected Size = ${Sizes[selectedSize]}`);
