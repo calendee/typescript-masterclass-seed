@@ -1495,23 +1495,109 @@
 
 
 
+// /**
+//  * Numeric Enums and Reverse Mapping
+//  * 
+//  * By default, you get numeric values from an enum
+//  */
+
+// enum Sizes {
+//   Small, Medium, Large
+// }
+
+// // If adding more declarations, must include the index
+// enum Sizes {
+//   ExtraLarge = 3,
+// }
+
+// console.log(Sizes.Medium);
+// console.log(Sizes[2], Sizes.Large, Sizes[Sizes.Large]);
+
+// const selectedSize = 2;
+// console.log(`Selected Size = ${Sizes[selectedSize]}`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Numeric Enums and Reverse Mapping
- * 
- * By default, you get numeric values from an enum
+ * String Enums and Inlining Members
  */
 
-enum Sizes {
-  Small, Medium, Large
+ // New feature of TS allows setting values to strings
+ // Unfortunately, this doesn't have reverse mappings
+ enum Sizes {
+   Small = 'small',
+   Medium = 'medium',
+   Large ='large',
+ }
+
+
+let selected: Sizes = Sizes.Small;
+
+function updateSize(size: Sizes) {
+  selected = size;
 }
 
-// If adding more declarations, must include the index
-enum Sizes {
-  ExtraLarge = 3,
+// Not allowed
+updateSize('Massive');
+updateSize('medium');
+
+updateSize(Sizes.Large);
+updateSize(Sizes.Medium);
+
+
+// If you use a `const` in front, it will do `inlining` members instead
+// of creating a sizes object
+
+const enum Sizes2 {
+  Small = 'small',
+  Medium = 'medium',
+  Large ='large',
 }
 
-console.log(Sizes.Medium);
-console.log(Sizes[2], Sizes.Large, Sizes[Sizes.Large]);
+let selected2 = 'small';
 
-const selectedSize = 2;
-console.log(`Selected Size = ${Sizes[selectedSize]}`);
+function updateSize2(size: Sizes2) {
+  selected2 = size;
+}
+
+// Not allowed because not in enum
+updateSize2('largest');
+
+updateSize2(Sizes2.Large);
+
+
