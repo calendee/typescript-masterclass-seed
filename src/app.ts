@@ -1714,23 +1714,71 @@
 
 
 
+// /**
+//  * Augmenting Modules with Declarations
+//  */
+
+
+// import * as _ from 'lodash';
+// console.log(_.chunk([1, 2, 3, 4], 2));
+
+// // Create a new lodash function
+// _.mixin({
+//   log(item: string) {
+//     console.log(':::', item);
+//   }
+// });
+
+// // works!!
+// _.log('Hello!');
+
+// // Doesn't work!
+// // _.log(12);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Augmenting Modules with Declarations
+ * Emitting Declaration Files From tsc
  */
 
 
-import * as _ from 'lodash';
-console.log(_.chunk([1, 2, 3, 4], 2));
+// In tsconfig.json, setting the "declaration" property to true will
+// generate a declarations file for any functions or variables
+// The file will be in the dist directory `app.d.ts`
+// Useful when publishing a third part library
+// Setting the `declarationDir` property will determine where the file is output to
+ export class Foo {
+   constructor(public name: string) {}
 
-// Create a new lodash function
-_.mixin({
-  log(item: string) {
-    console.log(':::', item);
-  }
-});
-
-// works!!
-_.log('Hello!');
-
-// Doesn't work!
-// _.log(12);
+   bar(age: number) {}
+ }
